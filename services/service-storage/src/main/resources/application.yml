@@ -1,0 +1,106 @@
+spring:
+   application:
+      name: service-storage
+   profiles:
+      active: development
+
+
+
+---
+# configuration: common(default)
+spring:   
+   mvc:
+      throw-exception-if-no-handler-found: true
+   servlet:
+      multipart:
+         enabled: true
+         max-file-size: 50MB
+         max-request-size: 250MB
+      
+server:
+   port: 0
+   error:
+      whitelabel:
+         enabled: false
+      path: /error   
+   servlet:
+      context-path: /
+      encoding:
+         charset: UTF-8
+         enabled: true
+
+
+---
+# configuration: development
+spring:
+   config:
+      activate:
+         on-profile: development
+
+   devtools:
+      livereload:
+         enabled: true
+
+logging:
+   pattern:
+      console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n"
+   level:
+      root: INFO  
+               
+eureka:
+   instance:
+      preferIpAddress: true
+   client:
+      fetchRegistry: true
+      registerWithEureka: true
+      serviceUrl:
+         defaultZone: http://localhost:8761/eureka
+
+storage:
+   location: /Users/kickscar/service-storage/assets
+   httpd:
+      host: localhost
+      port: 9999           
+
+
+                            
+---
+# configuration: production
+spring:
+   config:
+      activate:
+         on-profile: production
+
+logging:
+   pattern:
+      file: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n"
+   logback:
+      rollingpolicy:
+         file-name-pattern: "logs/${spring.application.name}.%d{yyyy-MM-dd}.%i.log.zip"
+         max-file-size: 10MB
+         max-history: 10
+   file:
+      name: logs/${spring.application.name}.log
+   level:
+      root: WARN
+      com:
+         poscodx:
+            msa:
+               service:
+                  storage:
+                     exception: ERROR         
+
+eureka:
+   instance:
+      preferIpAddress: true
+   client:
+      fetchRegistry: true
+      registerWithEureka: true
+      serviceUrl:
+         defaultZone: http://192.168.66.4:8761/eureka
+
+storage:
+   location: /service-storage/assets
+   httpd:
+      host: 192.168.66.4
+      port: 9999
