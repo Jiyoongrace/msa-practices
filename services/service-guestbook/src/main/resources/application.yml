@@ -9,24 +9,10 @@ spring:
 ---
 # configuration: common(default)
 spring:
-   mvc:
-      throw-exception-if-no-handler-found: true
-      
-mybatis:
-   config-location: classpath:mybatis/configuration.xml
-
-server:
-   port: 0
-   error:
-      whitelabel:
-         enabled: false
-      path: /error
-   servlet:
-      context-path: /
-      encoding:
-         charset: UTF-8
+   cloud:
+      config:
          enabled: true
-
+         uri: http://localhost:7777
 
 
 ---
@@ -35,35 +21,8 @@ spring:
    config:
       activate:
          on-profile: development
-
-   devtools:
-      livereload:
-         enabled: true
-   datasource:
-      driver-class-name: org.mariadb.jdbc.Driver
-      url: jdbc:mariadb://192.168.64.7:3306/webdb?characterEncoding=utf8
-      username: webdb
-      password: webdb
-      hikari:
-         minimum-idle: 10
-         maximum-pool-size: 20    
-
-eureka:
-   instance:
-      preferIpAddress: true
-   client:
-      fetchRegistry: true
-      registerWithEureka: true
-      serviceUrl:
-         defaultZone: http://localhost:8761/eureka
-
-logging:
-   pattern:
-      console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n"
-   level:
-      root: DEBUG
-           
-
+      import: optional:configserver:http://localhost:7777
+    
                             
 ---
 # configuration: production
@@ -71,40 +30,4 @@ spring:
    config:
       activate:
          on-profile: production
-
-   datasource:
-      driver-class-name: org.mariadb.jdbc.Driver
-      url: jdbc:mariadb://192.168.64.7:3306/webdb?characterEncoding=utf8
-      username: webdb
-      password: webdb
-      hikari:
-         minimum-idle: 10
-         maximum-pool-size: 20
-
-eureka:
-   instance:
-      preferIpAddress: true
-   client:
-      fetchRegistry: true
-      registerWithEureka: true
-      serviceUrl:
-         defaultZone: http://192.168.64.7:8761/eureka
-
-logging:
-   pattern:
-      file: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n"
-   logback:
-      rollingpolicy:
-         file-name-pattern: "logs/${spring.application.name}.%d{yyyy-MM-dd}.%i.log.zip"
-         max-file-size: 10MB
-         max-history: 10
-   file:
-      name: logs/${spring.application.name}.log
-   level:
-      root: WARN
-      com:
-         poscodx:
-            msa:
-               service:
-                  guestbook:
-                     exception: ERROR
+      import: optional:configserver:http://192.168.64.7:7777

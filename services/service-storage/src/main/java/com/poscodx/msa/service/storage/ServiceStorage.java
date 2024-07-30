@@ -35,7 +35,7 @@ public class ServiceStorage {
 	ApplicationRunner httpdRunner() {
 		return new ApplicationRunner() {
 			@Autowired
-			private SimpleHttpd httpd; // 이미지 서버 
+			private SimpleHttpd httpd;
 
 			@Override
 			public void run(ApplicationArguments args) throws Exception {
